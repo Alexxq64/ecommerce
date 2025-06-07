@@ -92,29 +92,29 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public ApplicationRunner passwordCheckRunner() {
-        return args -> {
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            String rawPassword = "qq";
-            String dbPassword = "$2a$10$N9qo8uLOickgx2ZMRZoMy.Mrq7MZYVSqJz4tJwS2QO3dQ9XHjDqG2";
-            String newHash = encoder.encode(rawPassword);
-
-            System.out.println("\n=== Security Configuration Check ===");
-            System.out.println("Password matches: " + encoder.matches(rawPassword, dbPassword));
-            System.out.println("New hash for verification: " + newHash);
-            System.out.println("New hash matches raw: " + encoder.matches(rawPassword, newHash));
-            System.out.println("====================================\n");
-        };
-    }
-
-    @Bean
-    public ApplicationRunner passwordHashGenerator() {
-        return args -> {
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            String rawPassword = "qq";
-            String encodedPassword = encoder.encode(rawPassword);
-            System.out.println("BCrypt hash for 'qq': " + encodedPassword);
-        };
-    }
+//    @Bean
+//    public ApplicationRunner passwordCheckRunner() {
+//        return args -> {
+//            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+//            String rawPassword = "qq";
+//            String dbPassword = "$2a$10$N9qo8uLOickgx2ZMRZoMy.Mrq7MZYVSqJz4tJwS2QO3dQ9XHjDqG2";
+//            String newHash = encoder.encode(rawPassword);
+//
+//            System.out.println("\n=== Security Configuration Check ===");
+//            System.out.println("Password matches: " + encoder.matches(rawPassword, dbPassword));
+//            System.out.println("New hash for verification: " + newHash);
+//            System.out.println("New hash matches raw: " + encoder.matches(rawPassword, newHash));
+//            System.out.println("====================================\n");
+//        };
+//    }
+//
+//    @Bean
+//    public ApplicationRunner passwordHashGenerator() {
+//        return args -> {
+//            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+//            String rawPassword = "qq";
+//            String encodedPassword = encoder.encode(rawPassword);
+//            System.out.println("BCrypt hash for 'qq': " + encodedPassword);
+//        };
+//    }
 }
