@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8" />
+  <title>Админ-панель</title>
+</head>
+<body>
+<h1>Админ-панель</h1>
+
+<p>Добро пожаловать, <span sec:authentication="name"></span>!</p>
+
+<nav>
+  <ul>
+    <li><a th:href="@{/admin/products}">Управление товарами</a></li>
+    <li><a th:href="@{/admin/categories}">Управление категориями</a></li>
+    <li><a th:href="@{/admin/users}">Управление пользователями</a></li>
+    <li><a th:href="@{/admin/orders}">Заказы</a></li>
+    <li><a th:href="@{/admin/messages}">Сообщения</a></li>
+  </ul>
+</nav>
+
+</body>
+</html>

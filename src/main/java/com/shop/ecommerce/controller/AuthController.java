@@ -1,6 +1,7 @@
 package com.shop.ecommerce.controller;
 
 import com.shop.ecommerce.dto.AuthDto;
+import com.shop.ecommerce.entity.User;
 import com.shop.ecommerce.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,9 +18,9 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody AuthDto authDto) {
+    public String register(@RequestBody User user) {
         // Передаем весь объект AuthDto в метод сервиса
-        userService.register(authDto);
+        userService.registerUser(user);
         return "User registered successfully";
     }
 }
