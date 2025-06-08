@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Управление категориями</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+<h1>Категории</h1>
+
+<a th:href="@{/admin/panel}" style="margin-top: 20px; display: inline-block;">← Вернуться в админ-панель</a>
+<br/>
+<a th:href="@{/admin/categories/create}" style="margin-bottom: 10px; display: inline-block;">Добавить категорию</a>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Название</th>
+        <th>Родительская категория</th>
+        <th>Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="category : ${categories}">
+        <td th:text="${category.id}"></td>
+        <td th:text="${category.name}"></td>
+        <td>
+            <span th:if="${category.parentName != null}" th:text="${category.parentName}">—</span>
+            <span th:unless="${category.parentName != null}">—</span>
+        </td>
+        <td>
+            <a th:href="@{'/admin/categories/' + ${category.id} + '/edit'}">Редактировать</a> |
+            <form th:action="@{'/admin/categories/' + ${category.id} + '/delete'}" method="post" style="display:inline;">
+                <button type="submit" onclick="return confirm('Удалить категорию?');">Удалить</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

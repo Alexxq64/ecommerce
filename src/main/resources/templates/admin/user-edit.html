@@ -19,13 +19,13 @@
   <div>
     <label>Роль:</label>
     <select th:field="*{role}">
-      <option th:value="USER" th:text="'USER'" />
-      <option th:value="ADMIN" th:text="'ADMIN'" />
+      <option th:value="USER" th:text="'USER'"></option>
+      <option th:value="ADMIN" th:text="'ADMIN'"></option>
     </select>
   </div>
   <div>
     <button type="submit">Сохранить</button>
-    <a href="/admin/users">Отмена</a>
+    <a th:href="@{/admin/users}">Отмена</a>
   </div>
 </form>
 </body>

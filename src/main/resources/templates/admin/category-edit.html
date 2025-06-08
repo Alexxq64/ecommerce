@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title th:text="${category.id == null} ? 'Создать категорию' : 'Редактировать категорию'">Редактировать категорию</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+<h1 th:text="${category.id == null} ? 'Создать категорию' : 'Редактировать категорию'"></h1>
+
+<form th:action="${category.id == null} ? @{/admin/categories/save} : @{/admin/categories/update/{id}(id=${category.id})}"
+      th:object="${category}" method="post">
+
+  <label for="name">Название категории:</label>
+  <input type="text" id="name" th:field="*{name}" required/>
+
+  <label for="parent">Родительская категория:</label>
+  <select id="parent" th:field="*{parent}">
+    <option th:value="" th:text="'— Нет родителя —'"></option>
+    <option th:each="parentCat : ${allCategories}"
+            th:value="${parentCat}"
+            th:text="${parentCat.name}"
+            th:selected="${category.parent != null} ? (parentCat.id == category.parent.id) : false">
+    </option>
+  </select>
+
+  <br/><br/>
+  <button type="submit">Сохранить</button>
+  <a th:href="@{/admin/categories}">Отмена</a>
+</form>
+
+</body>
+</html>

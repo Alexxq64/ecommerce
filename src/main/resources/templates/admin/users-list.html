@@ -2,11 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Список пользователей</title>
+  <title>Пользователи</title>
 </head>
 <body>
 <h1>Пользователи</h1>
-<a href="/admin/panel" style="margin-top: 20px; display: inline-block;">← Вернуться в админ-панель</a>
+<a th:href="@{/admin/panel}" style="margin-top: 20px; display: inline-block;">← Вернуться в админ-панель</a>
 <table border="1">
   <thead>
   <tr>
@@ -33,6 +33,6 @@
   </tr>
   </tbody>
 </table>
-<a href="/admin/users/new" style="margin-bottom: 10px; display: inline-block;">Добавить пользователя</a>
+<a th:href="@{/admin/users/new}" style="margin-bottom: 10px; display: inline-block;">Добавить пользователя</a>
 </body>
 </html>
