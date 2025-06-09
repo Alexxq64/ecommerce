@@ -33,13 +33,6 @@ public class CategoryService {
                 .toList();
     }
 
-    public List<CategoryDto> getChildren(Long parentId) {
-        return categoryRepository.findByParentId(parentId)
-                .stream()
-                .map(categoryMapper::toDto)
-                .toList();
-    }
-
     public CategoryDto getCategoryById(Long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Category not found with id " + id));
@@ -95,20 +88,6 @@ public class CategoryService {
         categoryRepository.delete(category);
     }
 
-    public List<Long> getAllDescendantCategoryIds(Long parentId) {
-        List<Long> ids = new ArrayList<>();
-        collectCategoryIds(parentId, ids);
-        return ids;
-    }
-
-    private void collectCategoryIds(Long parentId, List<Long> ids) {
-        ids.add(parentId); // добавляем текущую категорию
-        List<Category> children = categoryRepository.findByParentId(parentId);
-        for (Category child : children) {
-            collectCategoryIds(child.getId(), ids); // рекурсивный вызов
-        }
-    }
-
     // --- Добавлено из фронтового сервиса ---
 
     /**
@@ -121,21 +100,21 @@ public class CategoryService {
                 .toList();
     }
 
+
     /**
-     * Рекурсивно собрать список id самой категории и всех её подкатегорий
+     * Собирает рекурсивно все ID подкатегорий (включая саму категорию)
      */
-    public List<Long> getAllSubCategoryIds(Long categoryId) {
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new EntityNotFoundException("Category not found with id " + categoryId));
-        List<Long> ids = new ArrayList<>();
-        collectIdsRecursive(category, ids);
-        return ids;
+    public List<Long> getAllSubcategoryIds(Long categoryId) {
+        List<Long> result = new ArrayList<>();
+        collectSubcategoryIds(categoryId, result);
+        return result;
     }
 
-    private void collectIdsRecursive(Category category, List<Long> ids) {
-        ids.add(category.getId());
-        for (Category child : category.getChildren()) {
-            collectIdsRecursive(child, ids);
+    private void collectSubcategoryIds(Long categoryId, List<Long> result) {
+        result.add(categoryId);
+        List<Category> children = categoryRepository.findByParentId(categoryId);
+        for (Category child : children) {
+            collectSubcategoryIds(child.getId(), result);
         }
     }
 

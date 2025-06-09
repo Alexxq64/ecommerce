@@ -30,9 +30,14 @@ public class HomeController {
             @RequestParam(name = "page", defaultValue = "0") int page,
             Model model
     ) {
-        int pageSize = 12; // можно вынести в конфиг
+        int pageSize = 12;
 
-        Page<ProductDto> products = productService.getFilteredProducts(search, categoryId, PageRequest.of(page, pageSize));
+        List<Long> categoryIds = null;
+        if (categoryId != null) {
+            categoryIds = categoryService.getAllSubcategoryIds(categoryId);
+        }
+
+        Page<ProductDto> products = productService.getFilteredProducts(search, categoryIds, PageRequest.of(page, pageSize));
         List<CategoryDto> categories = categoryService.getCategoryTree();
 
         model.addAttribute("products", products);

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Корзина</title>
+</head>
+<body>
+
+<div sec:authorize="isAuthenticated()">
+  Здравствуйте, <span sec:authentication="name"></span>!
+  <a th:href="@{/logout}">Выйти</a>
+</div>
+<div sec:authorize="!isAuthenticated()">
+  <a th:href="@{/login}">Вход</a> / <a th:href="@{/register}">Регистрация</a>
+</div>
+
+<h1>Ваша корзина</h1>
+
+<!-- Если корзина пуста -->
+<div th:if="${cartItems == null or cartItems.isEmpty()}">
+  <p>Корзина пуста.</p>
+</div>
+
+<!-- Если корзина не пуста -->
+<div th:if="${cartItems != null and !cartItems.isEmpty()}">
+  <table border="1">
+    <thead>
+    <tr>
+      <th>Товар</th>
+      <th>Цена</th>
+      <th>Количество</th>
+      <th>Сумма</th>
+      <th>Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item : ${cartItems}">
+      <td th:text="${item.productName}">Название</td>
+      <td th:text="${item.productPrice}">Цена</td>
+      <td th:text="${item.quantity}">1</td>
+      <td th:text="${item.productPrice * item.quantity}">Сумма</td>
+      <td>
+        <form th:action="@{/cart/remove}" method="post" style="display:inline">
+          <input type="hidden" name="cartItemId" th:value="${item.id}"/>
+          <button type="submit">Удалить</button>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <form th:action="@{/cart/clear}" method="post">
+    <button type="submit">Очистить корзину</button>
+  </form>
+</div>
+
+<a th:href="@{/}">Продолжить покупки</a>
+
+</body>
+</html>

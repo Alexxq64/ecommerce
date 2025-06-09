@@ -9,6 +9,8 @@
 
 <div sec:authorize="isAuthenticated()">
   Здравствуйте, <span sec:authentication="name"></span>!
+  <a th:href="@{/cart}">Корзина</a>
+
   <a th:href="@{/logout}">Выйти</a>
 </div>
 <div sec:authorize="!isAuthenticated()">
@@ -32,11 +34,16 @@
 <div>
   <h3>Категории</h3>
   <ul>
+    <li>
+      <a th:href="@{/}">Все категории</a>  <!-- ссылка на весь каталог, без фильтра -->
+    </li>
     <li th:each="category : ${categories}">
       <a th:href="@{/(categoryId=${category.id})}"
          th:text="${category.name}">Категория</a>
       <!-- Рекурсивно выводим дочерние категории -->
-      <ul th:if="${#lists.isNotEmpty(category.children)}" th:replace="this :: categoryTree(${category.children})"></ul>
+      <!-- Исправлено: заменили isNotEmpty на !isEmpty -->
+      <div th:if="${!#lists.isEmpty(category.children)}"
+           th:replace="fragments/category-tree :: categoryTree(${category.children})"></div>
     </li>
   </ul>
 </div>
@@ -45,7 +52,8 @@
 <th:block th:fragment="categoryTree(children)">
   <li th:each="child : ${children}">
     <a th:href="@{/(categoryId=${child.id})}" th:text="${child.name}">Подкатегория</a>
-    <ul th:if="${#lists.isNotEmpty(child.children)}" th:replace="this :: categoryTree(${child.children})"></ul>
+    <!-- Исправлено: заменили isNotEmpty на !isEmpty -->
+    <ul th:if="${!#lists.isEmpty(child.children)}" th:replace="this :: categoryTree(${child.children})"></ul>
   </li>
 </th:block>
 
