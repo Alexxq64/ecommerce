@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>История заказов</title>
+    <meta charset="UTF-8" />
+</head>
+<body>
+<h1>История заказов</h1>
+
+<div th:if="${orders.isEmpty()}">
+    <p>У вас пока нет заказов.</p>
+</div>
+
+<div th:unless="${orders.isEmpty()}">
+    <table border="1" cellpadding="5" cellspacing="0">
+        <thead>
+        <tr>
+            <th>№ Заказа</th>
+            <th>Дата создания</th>
+            <th>Статус</th>
+            <th>Товары</th>
+            <th>Общая сумма</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.id}">1</td>
+            <td th:text="${#temporals.format(order.createdAt, 'dd.MM.yyyy HH:mm')}">01.01.2025 12:00</td>
+            <td th:text="${order.status}">НОВЫЙ</td>
+            <td>
+                <ul>
+                    <li th:each="item : ${order.items}">
+                        <span th:text="${item.productName}">Название товара</span> —
+                        <span th:text="${item.quantity}">1</span> шт. ×
+                        <span th:text="${#numbers.formatDecimal(item.price, 1, 2)}">0.00</span> руб.
+                    </li>
+                </ul>
+            </td>
+            <td>
+                <span th:text="${#numbers.formatDecimal(order.totalAmount, 1, 2)}">0.00</span> руб.
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<a href="/">Вернуться на главную</a>
+</body>
+</html>

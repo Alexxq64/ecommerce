@@ -72,4 +72,14 @@ public class ProductController {
         productService.deleteProduct(id);
         return "redirect:/admin/products";
     }
+
+    @GetMapping("/view/{id}")
+    public String viewProduct(@PathVariable Long id, Model model) {
+        ProductDto product = productService.getProductById(id); // или findById — проверь метод
+        String categoryPath = categoryService.getCategoryPath(product.getCategoryId());
+        model.addAttribute("product", product);
+        model.addAttribute("categoryPath", categoryPath);
+        return "product";
+    }
+
 }

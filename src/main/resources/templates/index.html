@@ -9,8 +9,8 @@
 
 <div sec:authorize="isAuthenticated()">
   Здравствуйте, <span sec:authentication="name"></span>!
-  <a th:href="@{/cart}">Корзина</a>
-
+  <a th:href="@{/cart}">Корзина</a> |
+  <a th:href="@{/orders}">История заказов</a> |
   <a th:href="@{/logout}">Выйти</a>
 </div>
 <div sec:authorize="!isAuthenticated()">
@@ -40,8 +40,6 @@
     <li th:each="category : ${categories}">
       <a th:href="@{/(categoryId=${category.id})}"
          th:text="${category.name}">Категория</a>
-      <!-- Рекурсивно выводим дочерние категории -->
-      <!-- Исправлено: заменили isNotEmpty на !isEmpty -->
       <div th:if="${!#lists.isEmpty(category.children)}"
            th:replace="fragments/category-tree :: categoryTree(${category.children})"></div>
     </li>
@@ -52,7 +50,6 @@
 <th:block th:fragment="categoryTree(children)">
   <li th:each="child : ${children}">
     <a th:href="@{/(categoryId=${child.id})}" th:text="${child.name}">Подкатегория</a>
-    <!-- Исправлено: заменили isNotEmpty на !isEmpty -->
     <ul th:if="${!#lists.isEmpty(child.children)}" th:replace="this :: categoryTree(${child.children})"></ul>
   </li>
 </th:block>
@@ -65,7 +62,9 @@
   </div>
   <ul>
     <li th:each="product : ${products.content}">
-      <h4 th:text="${product.name}">Название товара</h4>
+      <h4>
+        <a th:href="@{'/admin/products/view/' + ${product.id}}" th:text="${product.name}">Название товара</a>
+      </h4>
       <p th:text="${product.description}">Описание</p>
       <p>Цена: <span th:text="${product.price}">0</span> руб.</p>
 

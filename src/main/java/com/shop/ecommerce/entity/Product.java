@@ -2,8 +2,10 @@ package com.shop.ecommerce.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @Entity
 @Table(name = "products")
 public class Product {
@@ -24,5 +26,10 @@ public class Product {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    private Integer stock; // <-- добавьте это поле
+    private Integer stock;
+
+    // Конструктор только с ID — для использования в OrderItem
+    public Product(Long id) {
+        this.id = id;
+    }
 }

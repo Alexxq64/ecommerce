@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -117,5 +118,22 @@ public class CategoryService {
             collectSubcategoryIds(child.getId(), result);
         }
     }
+
+    public String getCategoryPath(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new EntityNotFoundException("Category not found with id " + categoryId));
+
+        List<String> names = new ArrayList<>();
+
+        while (category != null) {
+            names.add(category.getName());
+            category = category.getParent();
+        }
+
+        Collections.reverse(names);
+
+        return String.join(" > ", names);
+    }
+
 
 }

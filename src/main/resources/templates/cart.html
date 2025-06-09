@@ -53,6 +53,10 @@
   <form th:action="@{/cart/clear}" method="post">
     <button type="submit">Очистить корзину</button>
   </form>
+
+  <form th:action="@{/orders/create}" method="post" th:if="${cartItems != null and !cartItems.isEmpty()}">
+    <button type="submit">Оформить заказ</button>
+  </form>
 </div>
 
 <a th:href="@{/}">Продолжить покупки</a>
