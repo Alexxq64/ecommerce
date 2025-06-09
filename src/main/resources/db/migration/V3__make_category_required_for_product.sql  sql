@@ -1,0 +1,2 @@
+ALTER TABLE products
+MODIFY COLUMN category_id BIGINT NOT NULL;

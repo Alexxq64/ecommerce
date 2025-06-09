@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Добавить товар</title>
+</head>
+<body>
+<h1>Добавить товар</h1>
+
+<form th:action="@{/admin/products/create}" th:object="${product}" method="post">
+    <label>Название:</label>
+    <input type="text" th:field="*{name}" required/><br/>
+
+    <label>Описание:</label>
+    <textarea th:field="*{description}"></textarea><br/>
+
+    <label>Цена:</label>
+    <input type="number" th:field="*{price}" step="0.01" required/><br/>
+
+    <label>Количество:</label>
+    <input type="number" th:field="*{stock}" min="0" required/><br/>
+
+    <label>Категория:</label>
+    <select th:field="*{categoryId}">
+        <option th:each="category : ${categories}"
+                th:value="${category.id}"
+                th:text="${category.name}"></option>
+    </select><br/>
+
+    <button type="submit">Сохранить</button>
+</form>
+
+<a th:href="@{/admin/products}">Назад</a>
+</body>
+</html>

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -93,4 +94,49 @@ public class CategoryService {
 
         categoryRepository.delete(category);
     }
+
+    public List<Long> getAllDescendantCategoryIds(Long parentId) {
+        List<Long> ids = new ArrayList<>();
+        collectCategoryIds(parentId, ids);
+        return ids;
+    }
+
+    private void collectCategoryIds(Long parentId, List<Long> ids) {
+        ids.add(parentId); // добавляем текущую категорию
+        List<Category> children = categoryRepository.findByParentId(parentId);
+        for (Category child : children) {
+            collectCategoryIds(child.getId(), ids); // рекурсивный вызов
+        }
+    }
+
+    // --- Добавлено из фронтового сервиса ---
+
+    /**
+     * Получить дерево категорий с вложенными дочерними категориями рекурсивно
+     */
+    public List<CategoryDto> getCategoryTree() {
+        List<Category> rootCategories = categoryRepository.findByParentIsNull();
+        return rootCategories.stream()
+                .map(categoryMapper::toDto) // предполагается рекурсивное заполнение детей в маппере
+                .toList();
+    }
+
+    /**
+     * Рекурсивно собрать список id самой категории и всех её подкатегорий
+     */
+    public List<Long> getAllSubCategoryIds(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new EntityNotFoundException("Category not found with id " + categoryId));
+        List<Long> ids = new ArrayList<>();
+        collectIdsRecursive(category, ids);
+        return ids;
+    }
+
+    private void collectIdsRecursive(Category category, List<Long> ids) {
+        ids.add(category.getId());
+        for (Category child : category.getChildren()) {
+            collectIdsRecursive(child, ids);
+        }
+    }
+
 }

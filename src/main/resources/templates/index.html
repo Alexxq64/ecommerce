@@ -2,8 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-  <meta charset="UTF-8">
-  <title>Главная страница</title>
+  <meta charset="UTF-8"/>
+  <title>Главная страница - Каталог товаров</title>
 </head>
 <body>
 
@@ -11,12 +11,75 @@
   Здравствуйте, <span sec:authentication="name"></span>!
   <a th:href="@{/logout}">Выйти</a>
 </div>
+<div sec:authorize="!isAuthenticated()">
+  <a th:href="@{/login}">Вход</a> / <a th:href="@{/register}">Регистрация</a>
+</div>
 
 <div sec:authorize="hasRole('ADMIN')">
   <a th:href="@{/admin/panel}">Админ-панель</a>
 </div>
 
-<h1>Добро пожаловать!</h1>
+<h1>Каталог товаров</h1>
+
+<!-- Форма фильтрации -->
+<form th:action="@{/}" method="get">
+  <input type="text" name="search" placeholder="Поиск по названию"
+         th:value="${search}"/>
+  <button type="submit">Искать</button>
+</form>
+
+<!-- Дерево категорий -->
+<div>
+  <h3>Категории</h3>
+  <ul>
+    <li th:each="category : ${categories}">
+      <a th:href="@{/(categoryId=${category.id})}"
+         th:text="${category.name}">Категория</a>
+      <!-- Рекурсивно выводим дочерние категории -->
+      <ul th:if="${#lists.isNotEmpty(category.children)}" th:replace="this :: categoryTree(${category.children})"></ul>
+    </li>
+  </ul>
+</div>
+
+<!-- Фрагмент для рекурсивного дерева категорий -->
+<th:block th:fragment="categoryTree(children)">
+  <li th:each="child : ${children}">
+    <a th:href="@{/(categoryId=${child.id})}" th:text="${child.name}">Подкатегория</a>
+    <ul th:if="${#lists.isNotEmpty(child.children)}" th:replace="this :: categoryTree(${child.children})"></ul>
+  </li>
+</th:block>
+
+<!-- Список товаров -->
+<div>
+  <h3>Товары</h3>
+  <div th:if="${products.content.size() == 0}">
+    <p>Товары не найдены.</p>
+  </div>
+  <ul>
+    <li th:each="product : ${products.content}">
+      <h4 th:text="${product.name}">Название товара</h4>
+      <p th:text="${product.description}">Описание</p>
+      <p>Цена: <span th:text="${product.price}">0</span> руб.</p>
+
+      <!-- Кнопка добавить в корзину -->
+      <form th:action="@{/cart/add}" method="post">
+        <input type="hidden" name="productId" th:value="${product.id}" />
+        <button type="submit">Добавить в корзину</button>
+      </form>
+    </li>
+  </ul>
+</div>
+
+<!-- Пагинация -->
+<div>
+  <span th:text="'Страница ' + ${products.number + 1} + ' из ' + ${products.totalPages}"></span>
+  <div>
+    <a th:if="${products.hasPrevious()}"
+       th:href="@{/(page=${products.number - 1}, search=${search}, categoryId=${categoryId})}">Назад</a>
+    <a th:if="${products.hasNext()}"
+       th:href="@{/(page=${products.number + 1}, search=${search}, categoryId=${categoryId})}">Вперед</a>
+  </div>
+</div>
 
 </body>
 </html>

@@ -20,9 +20,9 @@ public class Product {
     @Column(nullable = false)
     private Double price;
 
-    private String imageUrl;
-
-    @ManyToOne
-    @JoinColumn(name = "category_id")
+    @ManyToOne(optional = false) // 🔒 обязательно указывать категорию
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
+    private Integer stock; // <-- добавьте это поле
 }

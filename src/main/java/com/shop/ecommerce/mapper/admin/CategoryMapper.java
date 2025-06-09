@@ -11,6 +11,9 @@ import java.util.stream.Collectors;
 public class CategoryMapper {
 
     public CategoryDto toDto(Category category) {
+        if (category == null) {
+            return null;
+        }
         CategoryDto dto = new CategoryDto();
         dto.setId(category.getId());
         dto.setName(category.getName());
@@ -20,10 +23,16 @@ public class CategoryMapper {
             dto.setParentName(category.getParent().getName());
         }
 
+        // Рекурсивно преобразуем детей
+        List<CategoryDto> childrenDtos = category.getChildren()
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+        dto.setChildren(childrenDtos);
+
         return dto;
     }
 
-    // Новый метод для конвертации списка
     public List<CategoryDto> toDtoList(List<Category> categories) {
         return categories.stream()
                 .map(this::toDto)
