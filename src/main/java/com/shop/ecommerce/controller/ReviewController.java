@@ -35,45 +35,57 @@ public class ReviewController {
         return "reviews";  // создадим этот шаблон
     }
 
-    @PostMapping("/add")
-    public String addReview(@ModelAttribute("newReview") ReviewDto reviewDto, Authentication auth) {
-        if (auth == null || !auth.isAuthenticated()) {
-            return "redirect:/login";
-        }
-        String username = auth.getName();
-        reviewService.addReview(reviewMapper.toEntity(reviewDto), username, reviewDto.getProductId());
-        return "redirect:/reviews";
+    @GetMapping("/product/{productId}")
+    public String listReviewsByProduct(@PathVariable Long productId, Model model) {
+        List<ReviewDto> reviews = reviewService.findAllByProductId(productId).stream()
+                .map(reviewMapper::toDto)
+                .collect(Collectors.toList());
+        model.addAttribute("reviews", reviews);
+        model.addAttribute("newReview", new ReviewDto());
+        model.addAttribute("productId", productId);
+        return "reviews";
     }
 
-    @PostMapping("/edit/{id}")
-    public String editReview(@PathVariable Long id, @ModelAttribute ReviewDto reviewDto, Authentication auth) {
-        if (auth == null || !auth.isAuthenticated()) {
-            return "redirect:/login";
-        }
-        String username = auth.getName();
-        boolean isAdmin = auth.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-        try {
-            reviewService.updateReview(id, reviewMapper.toEntity(reviewDto), username, isAdmin);
-        } catch (AccessDeniedException e) {
-            return "redirect:/access-denied"; // или другую страницу ошибки
-        }
-        return "redirect:/reviews";
-    }
-
-    @PostMapping("/delete/{id}")
-    public String deleteReview(@PathVariable Long id, Authentication auth) {
-        if (auth == null || !auth.isAuthenticated()) {
-            return "redirect:/login";
-        }
-        String username = auth.getName();
-        boolean isAdmin = auth.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-        try {
-            reviewService.deleteReview(id, username, isAdmin);
-        } catch (AccessDeniedException e) {
-            return "redirect:/access-denied";
-        }
-        return "redirect:/reviews";
-    }
+//
+//    @PostMapping("/add")
+//    public String addReview(@ModelAttribute("newReview") ReviewDto reviewDto, Authentication auth) {
+//        if (auth == null || !auth.isAuthenticated()) {
+//            return "redirect:/login";
+//        }
+//        String username = auth.getName();
+//        reviewService.addReview(reviewMapper.toEntity(reviewDto), username, reviewDto.getProductId());
+//        return "redirect:/reviews";
+//    }
+//
+//    @PostMapping("/edit/{id}")
+//    public String editReview(@PathVariable Long id, @ModelAttribute ReviewDto reviewDto, Authentication auth) {
+//        if (auth == null || !auth.isAuthenticated()) {
+//            return "redirect:/login";
+//        }
+//        String username = auth.getName();
+//        boolean isAdmin = auth.getAuthorities().stream()
+//                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+//        try {
+//            reviewService.updateReview(id, reviewMapper.toEntity(reviewDto), username, isAdmin);
+//        } catch (AccessDeniedException e) {
+//            return "redirect:/access-denied"; // или другую страницу ошибки
+//        }
+//        return "redirect:/reviews";
+//    }
+//
+//    @PostMapping("/delete/{id}")
+//    public String deleteReview(@PathVariable Long id, Authentication auth) {
+//        if (auth == null || !auth.isAuthenticated()) {
+//            return "redirect:/login";
+//        }
+//        String username = auth.getName();
+//        boolean isAdmin = auth.getAuthorities().stream()
+//                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+//        try {
+//            reviewService.deleteReview(id, username, isAdmin);
+//        } catch (AccessDeniedException e) {
+//            return "redirect:/access-denied";
+//        }
+//        return "redirect:/reviews";
+//    }
 }

@@ -12,7 +12,8 @@
 <p th:text="${product.description}">Описание товара</p>
 
 <!-- Ссылка на отзывы -->
-<a th:href="@{'/reviews/' + ${product.id}}">Отзывы о товаре</a>
+<a th:href="@{'/reviews/product/' + ${product.id}}">Отзывы о товаре</a>
+
 <br><br>
 
 <!-- Форма добавления в корзину -->

@@ -10,8 +10,10 @@
 <div sec:authorize="isAuthenticated()">
   Здравствуйте, <span sec:authentication="name"></span>!
   <a th:href="@{/cart}">Корзина</a> |
-  <a th:href="@{/orders}">История заказов</a> |
-  <a th:href="@{/logout}">Выйти</a>
+  <a th:href="@{/orders}">История заказов</a>
+  <form th:action="@{/logout}" method="post" style="display:inline;">
+    <button type="submit">Выйти</button>
+  </form>
 </div>
 <div sec:authorize="!isAuthenticated()">
   <a th:href="@{/login}">Вход</a> / <a th:href="@{/register}">Регистрация</a>

@@ -57,4 +57,9 @@ public class ReviewService {
         }
         reviewRepository.delete(existing);
     }
+
+    public List<Review> findAllByProductId(Long productId) {
+        return reviewRepository.findAllByProductId(productId);
+    }
+
 }
