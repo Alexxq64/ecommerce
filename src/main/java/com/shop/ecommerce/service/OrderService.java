@@ -5,6 +5,7 @@ import com.shop.ecommerce.entity.Order;
 import com.shop.ecommerce.entity.OrderItem;
 import com.shop.ecommerce.entity.Product;
 import com.shop.ecommerce.entity.User;
+import com.shop.ecommerce.enums.OrderStatus;
 import com.shop.ecommerce.repository.OrderRepository;
 import com.shop.ecommerce.repository.ProductRepository;
 import com.shop.ecommerce.repository.UserRepository;
@@ -94,5 +95,22 @@ public class OrderService {
 
         return savedOrder;
     }
+
+    public OrderStatus getOrderStatus(Order order) {
+        try {
+            return OrderStatus.valueOf(order.getStatus());
+        } catch (IllegalArgumentException | NullPointerException e) {
+            // Если статус в базе неожиданно невалидный — возвращаем НОВЫЙ по умолчанию
+            return OrderStatus.НОВЫЙ;
+        }
+    }
+
+    public void setOrderStatus(Order order, OrderStatus status) {
+        if (status == null) {
+            throw new IllegalArgumentException("OrderStatus не может быть null");
+        }
+        order.setStatus(status.name());
+    }
+
 }
 
