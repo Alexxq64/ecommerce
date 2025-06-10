@@ -15,7 +15,7 @@ public class Review {
     private Long id;
 
     @Column(name = "content")
-    private String comment;
+    private String content;
 
     private Integer rating;
 

@@ -10,7 +10,7 @@ public class ReviewMapper {
     public ReviewDto toDto(Review review) {
         ReviewDto dto = new ReviewDto();
         dto.setId(review.getId());
-        dto.setComment(review.getComment());
+        dto.setContent(review.getContent());
         dto.setRating(review.getRating());
         dto.setCreatedAt(review.getCreatedAt());
         dto.setUsername(review.getUser() != null ? review.getUser().getUsername() : null);
@@ -20,7 +20,7 @@ public class ReviewMapper {
 
     public Review toEntity(ReviewDto dto) {
         Review review = new Review();
-        review.setComment(dto.getComment());
+        review.setContent(dto.getContent());
         review.setRating(dto.getRating());
         // id, user и product устанавливаются в сервисе
         return review;

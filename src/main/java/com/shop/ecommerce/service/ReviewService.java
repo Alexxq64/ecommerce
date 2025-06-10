@@ -4,12 +4,12 @@ import com.shop.ecommerce.entity.Review;
 import com.shop.ecommerce.repository.ReviewRepository;
 import com.shop.ecommerce.repository.UserRepository;
 import com.shop.ecommerce.repository.ProductRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -45,8 +45,8 @@ public class ReviewService {
         if (!isAdmin && !existing.getUser().getUsername().equals(username)) {
             throw new AccessDeniedException("You can edit only your own reviews");
         }
-        existing.setComment(updatedReview.getComment());
-        existing.setRating(updatedReview.getRating());
+
+        existing.setContent(updatedReview.getContent()); // раньше было setComment()
         return reviewRepository.save(existing);
     }
 
@@ -60,6 +60,24 @@ public class ReviewService {
 
     public List<Review> findAllByProductId(Long productId) {
         return reviewRepository.findAllByProductId(productId);
+    }
+
+    public String getProductName(Long productId) {
+        return productRepository.findById(productId)
+                .map(p -> p.getName())
+                .orElse("Неизвестный товар");
+    }
+
+
+    public Review findByIdIfAuthorized(Long id, String username, boolean isAdmin) {
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Отзыв не найден"));
+
+        if (!review.getUser().getUsername().equals(username) && !isAdmin) {
+            throw new AccessDeniedException("Нет доступа");
+        }
+
+        return review;
     }
 
 }
