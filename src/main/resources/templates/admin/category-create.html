@@ -1,31 +1,34 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="fragments/layout :: layout">
 <head>
   <title>Создать категорию</title>
   <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
-<h1>Создать категорию</h1>
+<div th:fragment="content">
 
-<form th:action="@{/admin/categories/create}" th:object="${category}" method="post">
+  <h1>Создать категорию</h1>
 
-  <label for="name">Название категории:</label>
-  <input type="text" id="name" th:field="*{name}" required/>
+  <form th:action="@{/admin/categories/create}" th:object="${category}" method="post">
 
-  <label for="parent">Родительская категория:</label>
-  <select id="parent" th:field="*{parentId}">
-    <option th:value="${null}" th:text="'— Нет родителя —'"></option>
-    <option th:each="parentCat : ${allCategories}"
-            th:value="${parentCat.id}"
-            th:text="${parentCat.name}">
-    </option>
-  </select>
+    <label for="name">Название категории:</label>
+    <input type="text" id="name" th:field="*{name}" required/>
 
+    <label for="parent">Родительская категория:</label>
+    <select id="parent" th:field="*{parentId}">
+      <option th:value="${null}" th:text="'— Нет родителя —'"></option>
+      <option th:each="parentCat : ${allCategories}"
+              th:value="${parentCat.id}"
+              th:text="${parentCat.name}">
+      </option>
+    </select>
 
-  <br/><br/>
-  <button type="submit">Создать</button>
-  <a th:href="@{/admin/categories}">Отмена</a>
-</form>
+    <br/><br/>
+    <button type="submit">Создать</button>
+    <a th:href="@{/admin/categories}">Отмена</a>
+  </form>
 
+</div>
 </body>
 </html>

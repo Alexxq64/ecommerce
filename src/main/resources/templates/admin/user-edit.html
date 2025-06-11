@@ -1,32 +1,37 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="fragments/layout :: layout">
 <head>
   <meta charset="UTF-8" />
   <title>Редактирование пользователя</title>
 </head>
 <body>
-<h1>Редактировать пользователя</h1>
-<form th:action="@{/admin/users/edit}" th:object="${user}" method="post">
-  <input type="hidden" th:field="*{id}" />
-  <div>
-    <label>Имя пользователя:</label>
-    <input type="text" th:field="*{username}" readonly />
-  </div>
-  <div>
-    <label>Email:</label>
-    <input type="email" th:field="*{email}" />
-  </div>
-  <div>
-    <label>Роль:</label>
-    <select th:field="*{role}">
-      <option th:value="USER" th:text="'USER'"></option>
-      <option th:value="ADMIN" th:text="'ADMIN'"></option>
-    </select>
-  </div>
-  <div>
-    <button type="submit">Сохранить</button>
-    <a th:href="@{/admin/users}">Отмена</a>
-  </div>
-</form>
+<div th:fragment="content">
+
+  <h1>Редактировать пользователя</h1>
+  <form th:action="@{/admin/users/edit}" th:object="${user}" method="post">
+    <input type="hidden" th:field="*{id}" />
+    <div>
+      <label>Имя пользователя:</label>
+      <input type="text" th:field="*{username}" readonly />
+    </div>
+    <div>
+      <label>Email:</label>
+      <input type="email" th:field="*{email}" />
+    </div>
+    <div>
+      <label>Роль:</label>
+      <select th:field="*{role}">
+        <option th:value="USER" th:text="'USER'"></option>
+        <option th:value="ADMIN" th:text="'ADMIN'"></option>
+      </select>
+    </div>
+    <div>
+      <button type="submit">Сохранить</button>
+      <a th:href="@{/admin/users}">Отмена</a>
+    </div>
+  </form>
+
+</div>
 </body>
 </html>
