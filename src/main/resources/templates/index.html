@@ -1,94 +1,97 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="fragments/layout :: layout">
+
 <head>
   <meta charset="UTF-8"/>
   <title>Главная страница - Каталог товаров</title>
 </head>
+
 <body>
+<div th:fragment="content">
 
-<div sec:authorize="isAuthenticated()">
-  Здравствуйте, <span sec:authentication="name"></span>!
-  <a th:href="@{/cart}">Корзина</a> |
-  <a th:href="@{/orders}">История заказов</a>
-  <form th:action="@{/logout}" method="post" style="display:inline;">
-    <button type="submit">Выйти</button>
+  <div sec:authorize="isAuthenticated()">
+    Здравствуйте, <span sec:authentication="name"></span>!
+    <a th:href="@{/cart}">Корзина</a> |
+    <a th:href="@{/orders}">История заказов</a>
+    <form th:action="@{/logout}" method="post" style="display:inline;">
+      <button type="submit">Выйти</button>
+    </form>
+  </div>
+  <div sec:authorize="!isAuthenticated()">
+    <a th:href="@{/login}">Вход</a> / <a th:href="@{/register}">Регистрация</a>
+  </div>
+
+  <div sec:authorize="hasRole('ADMIN')">
+    <a th:href="@{/admin/panel}">Админ-панель</a>
+  </div>
+
+  <h1>Каталог товаров</h1>
+
+  <!-- Форма фильтрации -->
+  <form th:action="@{/}" method="get" class="mb-4">
+    <input type="text" name="search" placeholder="Поиск по названию"
+           th:value="${search}" class="form-control d-inline-block w-auto"/>
+    <button type="submit" class="btn btn-primary">Искать</button>
   </form>
-</div>
-<div sec:authorize="!isAuthenticated()">
-  <a th:href="@{/login}">Вход</a> / <a th:href="@{/register}">Регистрация</a>
-</div>
 
-<div sec:authorize="hasRole('ADMIN')">
-  <a th:href="@{/admin/panel}">Админ-панель</a>
-</div>
-
-<h1>Каталог товаров</h1>
-
-<!-- Форма фильтрации -->
-<form th:action="@{/}" method="get">
-  <input type="text" name="search" placeholder="Поиск по названию"
-         th:value="${search}"/>
-  <button type="submit">Искать</button>
-</form>
-
-<!-- Дерево категорий -->
-<div>
-  <h3>Категории</h3>
-  <ul>
-    <li>
-      <a th:href="@{/}">Все категории</a>  <!-- ссылка на весь каталог, без фильтра -->
-    </li>
-    <li th:each="category : ${categories}">
-      <a th:href="@{/(categoryId=${category.id})}"
-         th:text="${category.name}">Категория</a>
-      <div th:if="${!#lists.isEmpty(category.children)}"
-           th:replace="fragments/category-tree :: categoryTree(${category.children})"></div>
-    </li>
-  </ul>
-</div>
-
-<!-- Фрагмент для рекурсивного дерева категорий -->
-<th:block th:fragment="categoryTree(children)">
-  <li th:each="child : ${children}">
-    <a th:href="@{/(categoryId=${child.id})}" th:text="${child.name}">Подкатегория</a>
-    <ul th:if="${!#lists.isEmpty(child.children)}" th:replace="this :: categoryTree(${child.children})"></ul>
-  </li>
-</th:block>
-
-<!-- Список товаров -->
-<div>
-  <h3>Товары</h3>
-  <div th:if="${products.content.size() == 0}">
-    <p>Товары не найдены.</p>
+  <!-- Дерево категорий -->
+  <div class="mb-4">
+    <h3>Категории</h3>
+    <ul>
+      <li>
+        <a th:href="@{/}">Все категории</a>
+      </li>
+      <li th:each="category : ${categories}">
+        <a th:href="@{/(categoryId=${category.id})}" th:text="${category.name}">Категория</a>
+        <div th:if="${!#lists.isEmpty(category.children)}"
+             th:replace="fragments/category-tree :: categoryTree(${category.children})"></div>
+      </li>
+    </ul>
   </div>
-  <ul>
-    <li th:each="product : ${products.content}">
-      <h4>
-        <a th:href="@{'/admin/products/view/' + ${product.id}}" th:text="${product.name}">Название товара</a>
-      </h4>
-      <p th:text="${product.description}">Описание</p>
-      <p>Цена: <span th:text="${product.price}">0</span> руб.</p>
 
-      <!-- Кнопка добавить в корзину -->
-      <form th:action="@{/cart/add}" method="post">
-        <input type="hidden" name="productId" th:value="${product.id}" />
-        <button type="submit">Добавить в корзину</button>
-      </form>
+  <!-- Фрагмент для рекурсивного дерева категорий -->
+  <th:block th:fragment="categoryTree(children)">
+    <li th:each="child : ${children}">
+      <a th:href="@{/(categoryId=${child.id})}" th:text="${child.name}">Подкатегория</a>
+      <ul th:if="${!#lists.isEmpty(child.children)}" th:replace="this :: categoryTree(${child.children})"></ul>
     </li>
-  </ul>
-</div>
+  </th:block>
 
-<!-- Пагинация -->
-<div>
-  <span th:text="'Страница ' + ${products.number + 1} + ' из ' + ${products.totalPages}"></span>
+  <!-- Список товаров -->
   <div>
-    <a th:if="${products.hasPrevious()}"
-       th:href="@{/(page=${products.number - 1}, search=${search}, categoryId=${categoryId})}">Назад</a>
-    <a th:if="${products.hasNext()}"
-       th:href="@{/(page=${products.number + 1}, search=${search}, categoryId=${categoryId})}">Вперед</a>
-  </div>
-</div>
+    <h3>Товары</h3>
+    <div th:if="${products.content.size() == 0}">
+      <p>Товары не найдены.</p>
+    </div>
+    <ul>
+      <li th:each="product : ${products.content}">
+        <h4>
+          <a th:href="@{'/admin/products/view/' + ${product.id}}" th:text="${product.name}">Название товара</a>
+        </h4>
+        <p th:text="${product.description}">Описание</p>
+        <p>Цена: <span th:text="${product.price}">0</span> руб.</p>
 
+        <form th:action="@{/cart/add}" method="post">
+          <input type="hidden" name="productId" th:value="${product.id}" />
+          <button type="submit" class="btn btn-sm btn-outline-primary">Добавить в корзину</button>
+        </form>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Пагинация -->
+  <div class="mt-4">
+    <span th:text="'Страница ' + ${products.number + 1} + ' из ' + ${products.totalPages}"></span>
+    <div>
+      <a th:if="${products.hasPrevious()}"
+         th:href="@{/(page=${products.number - 1}, search=${search}, categoryId=${categoryId})}">Назад</a>
+      <a th:if="${products.hasNext()}"
+         th:href="@{/(page=${products.number + 1}, search=${search}, categoryId=${categoryId})}">Вперед</a>
+    </div>
+  </div>
+
+</div>
 </body>
 </html>
