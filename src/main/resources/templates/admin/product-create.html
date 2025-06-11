@@ -1,34 +1,39 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="fragments/layout :: layout">
 <head>
     <title>Добавить товар</title>
 </head>
 <body>
-<h1>Добавить товар</h1>
+<div th:fragment="content">
 
-<form th:action="@{/admin/products/create}" th:object="${product}" method="post">
-    <label>Название:</label>
-    <input type="text" th:field="*{name}" required/><br/>
+    <h1>Добавить товар</h1>
 
-    <label>Описание:</label>
-    <textarea th:field="*{description}"></textarea><br/>
+    <form th:action="@{/admin/products/create}" th:object="${product}" method="post">
+        <label>Название:</label>
+        <input type="text" th:field="*{name}" required/><br/>
 
-    <label>Цена:</label>
-    <input type="number" th:field="*{price}" step="0.01" required/><br/>
+        <label>Описание:</label>
+        <textarea th:field="*{description}"></textarea><br/>
 
-    <label>Количество:</label>
-    <input type="number" th:field="*{stock}" min="0" required/><br/>
+        <label>Цена:</label>
+        <input type="number" th:field="*{price}" step="0.01" required/><br/>
 
-    <label>Категория:</label>
-    <select th:field="*{categoryId}">
-        <option th:each="category : ${categories}"
-                th:value="${category.id}"
-                th:text="${category.name}"></option>
-    </select><br/>
+        <label>Количество:</label>
+        <input type="number" th:field="*{stock}" min="0" required/><br/>
 
-    <button type="submit">Сохранить</button>
-</form>
+        <label>Категория:</label>
+        <select th:field="*{categoryId}">
+            <option th:each="category : ${categories}"
+                    th:value="${category.id}"
+                    th:text="${category.name}"></option>
+        </select><br/>
 
-<a th:href="@{/admin/products}">Назад</a>
+        <button type="submit">Сохранить</button>
+    </form>
+
+    <a th:href="@{/admin/products}">Назад</a>
+
+</div>
 </body>
 </html>
