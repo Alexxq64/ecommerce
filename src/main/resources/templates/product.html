@@ -1,29 +1,37 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="fragments/layout :: layout">
+
 <head>
   <title th:text="${product.name}">Product</title>
 </head>
+
 <body>
-<h1 th:text="${product.name}">Название товара</h1>
+<div th:fragment="content">
 
-<p><strong>Категория:</strong> <span th:text="${categoryPath}">Категория</span></p>
-<p><strong>Цена:</strong> <span th:text="${product.price} + ' ₽'">Цена</span></p>
-<p><strong>Описание:</strong></p>
-<p th:text="${product.description}">Описание товара</p>
+  <h1 th:text="${product.name}">Название товара</h1>
 
-<!-- Ссылка на отзывы -->
-<a th:href="@{'/reviews/product/' + ${product.id}}">Отзывы о товаре</a>
+  <p><strong>Категория:</strong> <span th:text="${categoryPath}">Категория</span></p>
+  <p><strong>Цена:</strong> <span th:text="${product.price} + ' ₽'">Цена</span></p>
+  <p><strong>Описание:</strong></p>
+  <p th:text="${product.description}">Описание товара</p>
 
-<br><br>
+  <!-- Ссылка на отзывы -->
+  <a th:href="@{'/reviews/product/' + ${product.id}}">Отзывы о товаре</a>
 
-<!-- Форма добавления в корзину -->
-<form th:action="@{/cart/add}" method="post">
-  <input type="hidden" name="productId" th:value="${product.id}" />
-  <button type="submit">Добавить в корзину</button>
-</form>
+  <br><br>
 
-<br>
-<!-- Ссылка возврата в каталог -->
-<a th:href="@{/}">← Назад в каталог</a>
+  <!-- Форма добавления в корзину -->
+  <form th:action="@{/cart/add}" method="post">
+    <input type="hidden" name="productId" th:value="${product.id}" />
+    <button type="submit" class="btn btn-primary">Добавить в корзину</button>
+  </form>
+
+  <br>
+
+  <!-- Ссылка возврата в каталог -->
+  <a th:href="@{/}">← Назад в каталог</a>
+
+</div>
 </body>
 </html>
