@@ -31,23 +31,25 @@
     <td th:text="${review.content}">Комментарий</td>
     <td th:text="${#temporals.format(review.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</td>
     <td>
-      <!-- Кнопка редактировать для админа -->
+      <!-- Админ: может редактировать и удалять всё -->
       <span sec:authorize="hasRole('ADMIN')">
-                <a th:href="@{'/reviewsEdit/' + ${review.id} + '?productId=' + ${productId}}">Редактировать</a>
-                &nbsp;|&nbsp;
-            </span>
+    <a th:href="@{'/reviewsEdit/' + ${review.id} + '?productId=' + ${productId}}">Редактировать</a>
+    &nbsp;|&nbsp;
+    <form th:action="@{'/reviews/delete/' + ${review.id}}" method="post" style="display:inline;">
+      <input type="hidden" name="productId" th:value="${productId}" />
+      <button type="submit">Удалить</button>
+    </form>
+  </span>
 
-      <!-- Кнопка редактировать для автора -->
+      <!-- Автор: может редактировать и удалять свой отзыв -->
       <span sec:authorize="isAuthenticated()" th:if="${review.username == #authentication.name}">
-                <a th:href="@{'/reviewsEdit/' + ${review.id} + '?productId=' + ${productId}}">Редактировать</a>
-                &nbsp;|&nbsp;
-            </span>
-
-      <!-- Кнопка удалить (можно также ограничить по ролям, если нужно) -->
-      <form th:action="@{'/reviews/delete/' + ${review.id}}" method="post" style="display:inline;">
-        <input type="hidden" name="productId" th:value="${productId}" />
-        <button type="submit">Удалить</button>
-      </form>
+    <a th:href="@{'/reviewsEdit/' + ${review.id} + '?productId=' + ${productId}}">Редактировать</a>
+    &nbsp;|&nbsp;
+    <form th:action="@{'/reviews/delete/' + ${review.id}}" method="post" style="display:inline;">
+      <input type="hidden" name="productId" th:value="${productId}" />
+      <button type="submit">Удалить</button>
+    </form>
+  </span>
     </td>
   </tr>
   <tr th:if="${#lists.isEmpty(reviews)}">
