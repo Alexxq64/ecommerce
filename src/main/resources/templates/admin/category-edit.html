@@ -2,33 +2,38 @@
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="fragments/layout :: layout">
 <head>
-  <title th:text="${category.id == null} ? 'Создать категорию' : 'Редактировать категорию'">Редактировать категорию</title>
+  <title th:text="${category.id == null} ? 'Создать категорию' : 'Редактировать категорию'">Категория</title>
   <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
-<div th:fragment="content">
+<div th:fragment="content" class="container mt-4">
 
-  <h1 th:text="${category.id == null} ? 'Создать категорию' : 'Редактировать категорию'"></h1>
+  <h1 class="mb-4" th:text="${category.id == null} ? 'Создать категорию' : 'Редактировать категорию'">Категория</h1>
 
   <form th:action="${category.id == null} ? @{/admin/categories/save} : @{/admin/categories/{id}/edit(id=${category.id})}"
-        th:object="${category}" method="post">
+        th:object="${category}" method="post" class="mb-3">
 
-    <label for="name">Название категории:</label>
-    <input type="text" id="name" th:field="*{name}" required/>
+    <div class="mb-3">
+      <label for="name" class="form-label">Название категории:</label>
+      <input type="text" id="name" th:field="*{name}" class="form-control" required/>
+    </div>
 
-    <label for="parent">Родительская категория:</label>
-    <select id="parent" th:field="*{parentId}">
-      <option th:value="${null}" th:text="'— Нет родителя —'"></option>
-      <option th:each="parentCat : ${allCategories}"
-              th:value="${parentCat.id}"
-              th:text="${parentCat.name}"
-              th:selected="${parentCat.id == category.parentId}">
-      </option>
-    </select>
+    <div class="mb-4">
+      <label for="parent" class="form-label">Родительская категория:</label>
+      <select id="parent" th:field="*{parentId}" class="form-select">
+        <option th:value="${null}" th:text="'— Нет родителя —'"></option>
+        <option th:each="parentCat : ${allCategories}"
+                th:value="${parentCat.id}"
+                th:text="${parentCat.name}"
+                th:selected="${parentCat.id == category.parentId}">
+        </option>
+      </select>
+    </div>
 
-    <br/><br/>
-    <button type="submit" th:text="${category.id == null} ? 'Создать' : 'Сохранить'">Сохранить</button>
-    <a th:href="@{/admin/categories}">Отмена</a>
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-primary" th:text="${category.id == null} ? 'Создать' : 'Сохранить'">Сохранить</button>
+      <a th:href="@{/admin/categories}" class="btn btn-secondary">Отмена</a>
+    </div>
   </form>
 
 </div>

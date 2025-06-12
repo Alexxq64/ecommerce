@@ -6,17 +6,17 @@
     <meta charset="UTF-8" />
 </head>
 <body>
-<div th:fragment="content">
+<div th:fragment="content" class="container mt-4">
 
-    <h1>История заказов</h1>
+    <h1 class="mb-4">История заказов</h1>
 
     <div th:if="${orders.isEmpty()}">
         <p>У вас пока нет заказов.</p>
     </div>
 
     <div th:unless="${orders.isEmpty()}">
-        <table class="table table-bordered">
-            <thead>
+        <table class="table table-bordered table-striped">
+            <thead class="table-light">
             <tr>
                 <th>№ Заказа</th>
                 <th>Дата создания</th>
@@ -31,7 +31,7 @@
                 <td th:text="${#temporals.format(order.createdAt, 'dd.MM.yyyy HH:mm')}">01.01.2025 12:00</td>
                 <td th:text="${order.status}">НОВЫЙ</td>
                 <td>
-                    <ul>
+                    <ul class="mb-0 ps-3">
                         <li th:each="item : ${order.items}">
                             <span th:text="${item.productName}">Название товара</span> —
                             <span th:text="${item.quantity}">1</span> шт. ×
@@ -47,7 +47,11 @@
         </table>
     </div>
 
-    <a th:href="@{/}" class="btn btn-link mt-3">← Вернуться на главную</a>
+    <form th:action="@{/}" method="get" class="mt-3">
+        <button type="submit" class="btn btn-outline-primary">
+            ← Вернуться на главную
+        </button>
+    </form>
 
 </div>
 </body>

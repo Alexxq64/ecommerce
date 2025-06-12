@@ -9,26 +9,29 @@
 </head>
 
 <body>
-<div th:fragment="content">
+<div th:fragment="content" class="container mt-4">
 
-  <div sec:authorize="isAuthenticated()">
-    Здравствуйте, <span sec:authentication="name"></span>!
-    <a th:href="@{/logout}">Выйти</a>
-  </div>
-  <div sec:authorize="!isAuthenticated()">
-    <a th:href="@{/login}">Вход</a> / <a th:href="@{/register}">Регистрация</a>
+  <div sec:authorize="isAuthenticated()" class="mb-3">
+    Здравствуйте, <strong sec:authentication="name"></strong>!
   </div>
 
-  <h1>Ваша корзина</h1>
+  <div sec:authorize="!isAuthenticated()" class="mb-3 d-flex gap-2">
+    <form th:action="@{/login}" method="get" style="display:inline;">
+      <button type="submit" class="btn btn-outline-primary btn-sm">Вход</button>
+    </form>
+    <form th:action="@{/register}" method="get" style="display:inline;">
+      <button type="submit" class="btn btn-outline-secondary btn-sm">Регистрация</button>
+    </form>
+  </div>
 
-  <!-- Если корзина пуста -->
+  <h1 class="mb-4">Ваша корзина</h1>
+
   <div th:if="${cartItems == null or cartItems.isEmpty()}">
     <p>Корзина пуста.</p>
   </div>
 
-  <!-- Если корзина не пуста -->
   <div th:if="${cartItems != null and !cartItems.isEmpty()}">
-    <table class="table table-bordered">
+    <table class="table table-bordered align-middle">
       <thead>
       <tr>
         <th>Товар</th>
@@ -45,8 +48,8 @@
         <td th:text="${item.quantity}">1</td>
         <td th:text="${item.productPrice * item.quantity}">Сумма</td>
         <td>
-          <form th:action="@{/cart/remove}" method="post" style="display:inline">
-            <input type="hidden" name="cartItemId" th:value="${item.id}"/>
+          <form th:action="@{/cart/remove}" method="post" style="display:inline;">
+            <input type="hidden" name="cartItemId" th:value="${item.id}" />
             <button type="submit" class="btn btn-sm btn-outline-danger">Удалить</button>
           </form>
         </td>
@@ -54,16 +57,23 @@
       </tbody>
     </table>
 
-    <form th:action="@{/cart/clear}" method="post" class="mb-2">
-      <button type="submit" class="btn btn-outline-secondary">Очистить корзину</button>
-    </form>
+    <div class="d-flex gap-2 mb-3">
+      <form th:action="@{/cart/clear}" method="post">
+        <button type="submit" class="btn btn-outline-secondary">Очистить корзину</button>
+      </form>
 
-    <form th:action="@{/orders/create}" method="post">
-      <button type="submit" class="btn btn-primary">Оформить заказ</button>
-    </form>
+      <form th:action="@{/orders/create}" method="post">
+        <button type="submit" class="btn btn-primary">Оформить заказ</button>
+      </form>
+    </div>
   </div>
 
-  <a th:href="@{/}" class="btn btn-link mt-3">← Продолжить покупки</a>
+  <form th:action="@{/}" method="get" class="mt-3">
+    <button type="submit" class="btn btn-outline-primary">
+      ← Продолжить покупки
+    </button>
+  </form>
+
 
 </div>
 </body>

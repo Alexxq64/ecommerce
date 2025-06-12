@@ -7,16 +7,17 @@
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
-<div th:fragment="content">
+<div th:fragment="content" class="container mt-4">
 
-    <h1>Категории</h1>
+    <h1 class="mb-4">Категории</h1>
 
-    <a th:href="@{/admin/panel}" style="margin-top: 20px; display: inline-block;">← Вернуться в админ-панель</a>
-    <br/>
-    <a th:href="@{/admin/categories/create}" style="margin-bottom: 10px; display: inline-block;">Добавить категорию</a>
+    <div class="mb-3 d-flex gap-2 flex-wrap">
+        <a th:href="@{/admin/panel}" class="btn btn-secondary">← В админ-панель</a>
+        <a th:href="@{/admin/categories/create}" class="btn btn-primary">Добавить категорию</a>
+    </div>
 
-    <table border="1">
-        <thead>
+    <table class="table table-bordered align-middle">
+        <thead class="table-light">
         <tr>
             <th>ID</th>
             <th>Название</th>
@@ -28,15 +29,12 @@
         <tr th:each="category : ${categories}">
             <td th:text="${category.id}"></td>
             <td th:text="${category.name}"></td>
-            <td>
-                <span th:if="${category.parentName != null}" th:text="${category.parentName}">—</span>
-                <span th:unless="${category.parentName != null}">—</span>
-            </td>
-            <td>
-                <a th:href="@{'/admin/categories/' + ${category.id} + '/edit'}">Редактировать</a> |
+            <td th:text="${category.parentName != null ? category.parentName : '—'}"></td>
+            <td class="d-flex gap-2">
+                <a th:href="@{'/admin/categories/' + ${category.id} + '/edit'}" class="btn btn-sm btn-outline-primary">Редактировать</a>
                 <form th:action="@{'/admin/categories/' + ${category.id} + '/delete'}"
-                      method="post" style="display:inline;">
-                    <button type="submit" onclick="return confirm('Удалить категорию?');">Удалить</button>
+                      method="post" onsubmit="return confirm('Удалить категорию?');">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Удалить</button>
                 </form>
             </td>
         </tr>

@@ -4,15 +4,20 @@
 <head>
   <meta charset="UTF-8">
   <title>Пользователи</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
-<div th:fragment="content">
+<div th:fragment="content" class="container mt-4">
 
-  <h1>Пользователи</h1>
-  <a th:href="@{/admin/panel}" style="margin-top: 20px; display: inline-block;">← Вернуться в админ-панель</a>
+  <h1 class="mb-4">Пользователи</h1>
 
-  <table border="1">
-    <thead>
+  <div class="mb-3">
+    <a th:href="@{/admin/panel}" class="btn btn-secondary">← Вернуться в админ-панель</a>
+    <a th:href="@{/admin/users/new}" class="btn btn-primary ms-2">Добавить пользователя</a>
+  </div>
+
+  <table class="table table-bordered align-middle">
+    <thead class="table-light">
     <tr>
       <th>ID</th>
       <th>Имя пользователя</th>
@@ -30,15 +35,14 @@
       <td th:text="${user.role}"></td>
       <td th:text="${#temporals.format(user.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
       <td>
-        <a th:href="@{'/admin/users/edit/' + ${user.id}}">Редактировать</a> |
+        <a th:href="@{'/admin/users/edit/' + ${user.id}}" class="btn btn-sm btn-warning me-1">Редактировать</a>
         <a th:href="@{'/admin/users/delete/' + ${user.id}}"
-           onclick="return confirm('Удалить пользователя?');">Удалить</a>
+           onclick="return confirm('Удалить пользователя?');"
+           class="btn btn-sm btn-danger">Удалить</a>
       </td>
     </tr>
     </tbody>
   </table>
-
-  <a th:href="@{/admin/users/new}" style="margin-bottom: 10px; display: inline-block;">Добавить пользователя</a>
 
 </div>
 </body>

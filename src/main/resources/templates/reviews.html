@@ -4,12 +4,14 @@
       th:replace="fragments/layout :: layout">
 <head>
   <title>Отзывы</title>
+  <meta charset="UTF-8" />
 </head>
 <body>
 <div th:fragment="content">
   <section class="mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <a th:href="@{/}" class="btn btn-outline-secondary">
+
+    <div class="mb-4">
+      <a th:href="@{/}" class="btn btn-secondary">
         ← Вернуться в каталог
       </a>
     </div>
@@ -32,36 +34,44 @@
           <td th:text="${review.content}">Комментарий</td>
           <td th:text="${#temporals.format(review.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</td>
           <td>
-            <span sec:authorize="hasRole('ADMIN')">
-              <a th:href="@{'/reviewsEdit/' + ${review.id} + '?productId=' + ${productId}}">Редактировать</a>
-              &nbsp;|&nbsp;
-              <form th:action="@{'/reviews/delete/' + ${review.id}}" method="post" style="display:inline;">
-                <input type="hidden" name="productId" th:value="${productId}" />
-                <button type="submit" class="btn btn-link p-0">Удалить</button>
-              </form>
-            </span>
+            <div class="d-flex gap-2 flex-wrap">
+              <span sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{'/reviewsEdit/' + ${review.id} + '?productId=' + ${productId}}" class="btn btn-sm btn-outline-primary">
+                  Редактировать
+                </a>
+                <form th:action="@{'/reviews/delete/' + ${review.id}}" method="post" style="display:inline;">
+                  <input type="hidden" name="productId" th:value="${productId}" />
+                  <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Удалить отзыв?');">
+                    Удалить
+                  </button>
+                </form>
+              </span>
 
-            <span sec:authorize="isAuthenticated()" th:if="${review.username == #authentication.name}">
-              <a th:href="@{'/reviewsEdit/' + ${review.id} + '?productId=' + ${productId}}">Редактировать</a>
-              &nbsp;|&nbsp;
-              <form th:action="@{'/reviews/delete/' + ${review.id}}" method="post" style="display:inline;">
-                <input type="hidden" name="productId" th:value="${productId}" />
-                <button type="submit" class="btn btn-link p-0">Удалить</button>
-              </form>
-            </span>
+              <span sec:authorize="isAuthenticated()" th:if="${review.username == #authentication.name}">
+                <a th:href="@{'/reviewsEdit/' + ${review.id} + '?productId=' + ${productId}}" class="btn btn-sm btn-outline-primary">
+                  Редактировать
+                </a>
+                <form th:action="@{'/reviews/delete/' + ${review.id}}" method="post" style="display:inline;">
+                  <input type="hidden" name="productId" th:value="${productId}" />
+                  <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Удалить отзыв?');">
+                    Удалить
+                  </button>
+                </form>
+              </span>
+            </div>
           </td>
         </tr>
         <tr th:if="${#lists.isEmpty(reviews)}">
-          <td colspan="4">Отзывов пока нет.</td>
+          <td colspan="4" class="text-center">Отзывов пока нет.</td>
         </tr>
         </tbody>
       </table>
     </div>
 
-    <hr/>
+    <hr />
 
-    <div sec:authorize="isAuthenticated()">
-      <h2 class="h5">Добавить отзыв</h2>
+    <div sec:authorize="isAuthenticated()" class="mt-4">
+      <h2 class="h5 mb-3">Добавить отзыв</h2>
       <form th:action="@{'/reviews/product/' + ${productId} + '/add'}" method="post" th:object="${newReview}">
         <div class="mb-3">
           <textarea th:field="*{content}" placeholder="Комментарий..." required class="form-control" rows="4"></textarea>
@@ -70,9 +80,10 @@
       </form>
     </div>
 
-    <div sec:authorize="!isAuthenticated()">
+    <div sec:authorize="!isAuthenticated()" class="mt-4">
       <p><a th:href="@{/login}">Войдите</a>, чтобы оставить отзыв.</p>
     </div>
+
   </section>
 </div>
 </body>

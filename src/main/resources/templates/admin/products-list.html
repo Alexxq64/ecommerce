@@ -5,16 +5,17 @@
     <title>Список товаров</title>
 </head>
 <body>
-<div th:fragment="content">
+<div th:fragment="content" class="container mt-4">
 
-    <h1>Список товаров</h1>
+    <h1 class="mb-4">Список товаров</h1>
 
-    <a th:href="@{/admin/panel}" style="margin-top: 20px; display: inline-block;">← Вернуться в админ-панель</a>
-    <br/>
-    <a th:href="@{/admin/products/create}">Добавить товар</a>
+    <div class="mb-3 d-flex gap-2">
+        <a th:href="@{/admin/panel}" class="btn btn-secondary">← В админ-панель</a>
+        <a th:href="@{/admin/products/create}" class="btn btn-success">Добавить товар</a>
+    </div>
 
-    <table border="1" cellpadding="5" cellspacing="0">
-        <thead>
+    <table class="table table-bordered table-hover align-middle text-center">
+        <thead class="table-light">
         <tr>
             <th>ID</th>
             <th>Название</th>
@@ -31,10 +32,10 @@
             <td th:text="${product.price}"></td>
             <td th:text="${product.categoryName}"></td>
             <td th:text="${product.stock}"></td>
-            <td>
-                <a th:href="@{/admin/products/edit/{id}(id=${product.id})}">Редактировать</a>
-                <form th:action="@{/admin/products/delete/{id}(id=${product.id})}" method="post" style="display:inline;">
-                    <button type="submit" onclick="return confirm('Удалить этот товар?')">Удалить</button>
+            <td class="d-flex justify-content-center gap-2">
+                <a th:href="@{/admin/products/edit/{id}(id=${product.id})}" class="btn btn-sm btn-primary">Редактировать</a>
+                <form th:action="@{/admin/products/delete/{id}(id=${product.id})}" method="post" onsubmit="return confirm('Удалить этот товар?')">
+                    <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
                 </form>
             </td>
         </tr>

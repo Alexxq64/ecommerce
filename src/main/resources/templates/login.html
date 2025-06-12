@@ -7,20 +7,23 @@
 <body>
 <div th:fragment="content">
 
-    <h2>Вход</h2>
+    <!-- Твой код формы -->
+    <form th:action="@{/login}" method="post" style="max-width: 400px; margin-top: 20px;">
 
-    <form th:action="@{/login}" method="post">
-        <div>
-            <label for="username">Логин:</label>
-            <input type="text" id="username" name="username" />
+        <div style="display: flex; align-items: center; margin-bottom: 12px;">
+            <label for="username" style="width: 90px; text-align: right; margin-right: 10px;">Логин:</label>
+            <input type="text" id="username" name="username" style="flex: 1; padding: 6px 8px;" />
         </div>
-        <div>
-            <label for="password">Пароль:</label>
-            <input type="password" id="password" name="password" />
+
+        <div style="display: flex; align-items: center; margin-bottom: 12px;">
+            <label for="password" style="width: 90px; text-align: right; margin-right: 10px;">Пароль:</label>
+            <input type="password" id="password" name="password" style="flex: 1; padding: 6px 8px;" />
         </div>
-        <div>
-            <button type="submit">Войти</button>
+
+        <div style="text-align: right;">
+            <button type="submit" style="padding: 6px 20px;">Войти</button>
         </div>
+
     </form>
 
     <p th:if="${param.error}" style="color: red;">❌ Неверный логин или пароль</p>

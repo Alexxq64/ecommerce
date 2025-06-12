@@ -4,39 +4,48 @@
 <head>
   <meta charset="UTF-8" />
   <title>Добавить пользователя</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
-<div th:fragment="content">
+<div th:fragment="content" class="container mt-4" style="max-width: 600px;">
 
-  <h1>Добавить нового пользователя</h1>
-  <form th:action="@{/admin/users/new}" th:object="${user}" method="post">
-    <div>
-      <label>Имя пользователя:</label>
-      <input type="text" th:field="*{username}" required />
+  <h1 class="mb-4">Добавить нового пользователя</h1>
+
+  <form th:action="@{/admin/users/new}" th:object="${user}" method="post" class="needs-validation" novalidate>
+
+    <div class="mb-3">
+      <label for="username" class="form-label">Имя пользователя:</label>
+      <input id="username" type="text" th:field="*{username}" required class="form-control" />
     </div>
-    <div>
-      <label>Пароль:</label>
-      <input type="password" name="password" required />
+
+    <div class="mb-3">
+      <label for="password" class="form-label">Пароль:</label>
+      <input id="password" type="password" name="password" required class="form-control" />
     </div>
-    <div>
-      <label>Подтверждение пароля:</label>
-      <input type="password" name="passwordConfirm" required />
+
+    <div class="mb-3">
+      <label for="passwordConfirm" class="form-label">Подтверждение пароля:</label>
+      <input id="passwordConfirm" type="password" name="passwordConfirm" required class="form-control" />
     </div>
-    <div>
-      <label>Email:</label>
-      <input type="email" th:field="*{email}" />
+
+    <div class="mb-3">
+      <label for="email" class="form-label">Email:</label>
+      <input id="email" type="email" th:field="*{email}" class="form-control" />
     </div>
-    <div>
-      <label>Роль:</label>
-      <select th:field="*{role}">
+
+    <div class="mb-4">
+      <label for="role" class="form-label">Роль:</label>
+      <select id="role" th:field="*{role}" class="form-select">
         <option th:value="USER" th:text="'USER'"></option>
         <option th:value="ADMIN" th:text="'ADMIN'"></option>
       </select>
     </div>
+
     <div>
-      <button type="submit">Создать</button>
-      <a th:href="@{/admin/users}">Отмена</a>
+      <button type="submit" class="btn btn-primary me-2">Создать</button>
+      <a th:href="@{/admin/users}" class="btn btn-secondary">Отмена</a>
     </div>
+
   </form>
 
 </div>
